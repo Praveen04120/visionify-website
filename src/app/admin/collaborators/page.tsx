@@ -25,7 +25,10 @@ export default function ManageCollaborators() {
   const fetchData = async () => {
     try {
       const res = await fetch("/api/admin/collaborators");
-      if (res.ok) setItems(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) setItems(data);
+      }
     } catch (err) {
       console.error(err);
     } finally {

@@ -6,11 +6,11 @@ import { supabase } from "@/lib/supabase";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Collaborations | Visionify",
+  title: "Official Partners | Visionify",
   description: "Visionify Official Partnerships",
 };
 
-export default async function CollaborationsPage() {
+export default async function OfficialPartnersPage() {
   const { data: partners } = await supabase
     .from("portfolio_items")
     .select("*")
@@ -33,7 +33,7 @@ export default async function CollaborationsPage() {
           </Link>
           <span className="text-sm font-bold tracking-widest text-visionify-cyan uppercase mb-4 block">Official Partnerships</span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-visionify-navy mb-6">
-            Collaborations
+            Official Partners
           </h1>
           <div className="w-20 h-1 bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple mb-6 rounded-full"></div>
           <p className="text-lg text-gray-700 max-w-2xl font-medium leading-relaxed">

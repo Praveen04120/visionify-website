@@ -88,8 +88,8 @@ export default async function WorkPage() {
           <a href="#categories" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 flex items-center justify-center">
             Explore Categories
           </a>
-          <Link href="/get-a-quote" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-visionify-navy bg-white/90 backdrop-blur-sm border border-white hover:border-visionify-cyan shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 active:scale-95 flex items-center justify-center">
-            Start a Project
+          <Link href="/contact" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-visionify-navy bg-white/90 backdrop-blur-sm border border-white hover:border-visionify-cyan shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 active:scale-95 flex items-center justify-center">
+            Contact Us
           </Link>
         </div>
       </section>
@@ -147,10 +147,7 @@ export default async function WorkPage() {
             Tell us what you need, and we’ll turn your idea into a design that stands out.
           </p>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
-            <Link href="/get-a-quote" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple shadow-md active:scale-95 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center justify-center">
-              Get a Custom Quote
-            </Link>
-            <Link href="/#contact" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-visionify-navy bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-visionify-cyan shadow-sm active:scale-95 transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex items-center justify-center">
+            <Link href="/contact" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple shadow-md active:scale-95 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center justify-center">
               Contact Visionify
             </Link>
           </div>

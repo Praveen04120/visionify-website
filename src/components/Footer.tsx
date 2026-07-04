@@ -46,7 +46,7 @@ export default function Footer() {
                 <Link href="/work" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Our Work</Link>
               </li>
               <li>
-                <Link href="/collaborations" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Collaborations</Link>
+                <Link href="/official-partners" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Official Partners</Link>
               </li>
               <li>
                 <Link href="/community-collaborations" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Community Collabs</Link>

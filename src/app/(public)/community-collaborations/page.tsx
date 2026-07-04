@@ -21,7 +21,7 @@ export default function CommunityCollaborations() {
           <div className="space-y-8 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold text-visionify-navy mb-4">Why Partner With Us?</h2>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Visionify has a strong track record of elevating community events through premium visual design. Whether you need an entire branding package, striking posters, or engaging social media campaigns, we provide top-tier creative support.
+              Visionify has a strong track record of elevating community events through premium visual design. We provide dedicated support including <strong>event banners, hackathon creatives, posters, announcements, certificates, and full branding support</strong>.
             </p>
             
             <div className="space-y-6">
@@ -30,8 +30,8 @@ export default function CommunityCollaborations() {
                   <Users className="text-visionify-cyan" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-visionify-navy text-lg">Student Organizations</h3>
-                  <p className="text-gray-500 mt-1">Special packages and dedicated creative support for college fests and clubs.</p>
+                  <h3 className="font-bold text-visionify-navy text-lg">One Month Free Access</h3>
+                  <p className="text-gray-500 mt-1">We offer one month of free access to Visionify's design services for selected communities to supercharge your event's visual presence.</p>
                 </div>
               </div>
 
@@ -41,7 +41,7 @@ export default function CommunityCollaborations() {
                 </div>
                 <div>
                   <h3 className="font-bold text-visionify-navy text-lg">Major Events & Festivals</h3>
-                  <p className="text-gray-500 mt-1">End-to-end design solutions from early promotions to post-event highlights.</p>
+                  <p className="text-gray-500 mt-1">End-to-end design solutions from early promotions to post-event highlights for your biggest gatherings.</p>
                 </div>
               </div>
             </div>

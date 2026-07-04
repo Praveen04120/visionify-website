@@ -70,6 +70,7 @@ export default function CommunityApplications() {
           <option value="all">All Applications</option>
           <option value="new">New</option>
           <option value="contacted">Contacted</option>
+          <option value="approved">Approved</option>
           <option value="closed">Closed / Finished</option>
         </select>
       </div>
@@ -128,6 +129,7 @@ export default function CommunityApplications() {
                   >
                     <option value="new">New Application</option>
                     <option value="contacted">Contacted</option>
+                    <option value="approved">Approved</option>
                     <option value="closed">Closed / Finished</option>
                   </select>
                 </div>

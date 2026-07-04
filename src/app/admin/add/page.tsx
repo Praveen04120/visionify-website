@@ -27,9 +27,13 @@ export default function AddPortfolioItem() {
     fetch("/api/categories")
       .then(res => res.json())
       .then(data => {
-        setCategories(data);
-        if (data.length > 0) {
-          setFormData(prev => ({ ...prev, category: data[0].slug }));
+        if (Array.isArray(data)) {
+          setCategories(data);
+          if (data.length > 0) {
+            setFormData(prev => ({ ...prev, category: data[0].slug }));
+          }
+        } else {
+          console.error("Failed to load categories:", data);
         }
       })
       .catch(err => console.error("Failed to load categories:", err));

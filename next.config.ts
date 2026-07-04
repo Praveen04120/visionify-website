@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/collaborations',
+        destination: '/official-partners',
+        permanent: true,
+      },
+      {
+        source: '/get-a-quote',
+        destination: '/contact',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

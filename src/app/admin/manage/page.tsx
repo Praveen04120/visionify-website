@@ -19,8 +19,14 @@ export default function ManagePortfolio() {
         fetch("/api/categories")
       ]);
       
-      if (itemsRes.ok) setItems(await itemsRes.json());
-      if (catRes.ok) setCategories(await catRes.json());
+      if (itemsRes.ok) {
+        const itemsData = await itemsRes.json();
+        if (Array.isArray(itemsData)) setItems(itemsData);
+      }
+      if (catRes.ok) {
+        const catData = await catRes.json();
+        if (Array.isArray(catData)) setCategories(catData);
+      }
     } catch (err) {
       console.error(err);
     } finally {
