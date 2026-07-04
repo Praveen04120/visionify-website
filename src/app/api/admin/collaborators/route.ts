@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase";
 import { cookies } from "next/headers";
 
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("portfolio_items")
     .select("*")
     .eq("category", "_collaborators_")
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Name and Logo are required" }, { status: 400 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("portfolio_items")
       .insert([
         {

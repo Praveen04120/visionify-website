@@ -103,10 +103,11 @@ export default function ContactForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="contact_phone" className="text-sm font-semibold text-visionify-navy">Phone (Optional)</label>
+            <label htmlFor="contact_phone" className="text-sm font-semibold text-visionify-navy">Phone <span className="text-visionify-pink">*</span></label>
             <input 
               type="tel" 
               id="contact_phone" 
+              required
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})}
               placeholder="+91 98765 43210" 

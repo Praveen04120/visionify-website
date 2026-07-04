@@ -46,8 +46,9 @@ export default async function OfficialPartnersPage() {
       <section className="px-5 sm:px-6 lg:px-8 max-w-5xl mx-auto relative z-10">
         <div className="space-y-12">
           {(!partners || partners.length === 0) ? (
-            <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-gray-100">
-              <h3 className="text-xl font-bold text-visionify-navy">More collaborations coming soon!</h3>
+            <div className="text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-gray-100 shadow-sm">
+              <h3 className="text-xl font-bold text-visionify-navy mb-2">Expanding Our Network</h3>
+              <p className="text-gray-500 font-medium">We are actively building partnerships with innovative brands.</p>
             </div>
           ) : (
             partners.map((partner, index) => (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase";
 import { cookies } from "next/headers";
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
@@ -12,7 +12,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
   try {
     const { title, image_url, description, display_order, is_active } = await request.json();
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("portfolio_items")
       .update({
         title,
@@ -41,7 +41,24 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
   }
 
   try {
-    const { error } = await supabase
+    const { data: item, error: fetchError } = await supabaseAdmin
+      .from("portfolio_items")
+      .select("image_url")
+      .eq("id", (await context.params).id)
+      .eq("category", "_collaborators_")
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    if (item && item.image_url) {
+      const urlParts = item.image_url.split('/portfolio-images/');
+      if (urlParts.length === 2) {
+        const filePath = urlParts[1];
+        await supabaseAdmin.storage.from('portfolio-images').remove([filePath]);
+      }
+    }
+
+    const { error } = await supabaseAdmin
       .from("portfolio_items")
       .delete()
       .eq("id", (await context.params).id)

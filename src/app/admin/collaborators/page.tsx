@@ -55,19 +55,18 @@ export default function ManageCollaborators() {
       let finalImageUrl = formData.image_url;
 
       if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-        const { data, error: uploadError } = await supabase.storage
-          .from('portfolio-images')
-          .upload(`collaborators/${fileName}`, file, { upsert: false });
+        const uploadForm = new FormData();
+        uploadForm.append("file", file);
 
-        if (uploadError) throw new Error("Failed to upload image: " + uploadError.message);
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('portfolio-images')
-          .getPublicUrl(`collaborators/${fileName}`);
-
-        finalImageUrl = publicUrl;
+        const uploadRes = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: uploadForm
+        });
+        
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || "Failed to upload image");
+        
+        finalImageUrl = uploadData.url;
       }
 
       if (!finalImageUrl) {
@@ -117,14 +116,7 @@ export default function ManageCollaborators() {
   const handleDelete = async (id: string, imageUrl: string) => {
     if (!window.confirm("Are you sure? This will delete the collaborator and their logo.")) return;
     try {
-      if (imageUrl && imageUrl.includes("supabase.co")) {
-        const pathMatch = imageUrl.match(/portfolio-images\/(.+)$/);
-        if (pathMatch) {
-          const filePath = pathMatch[1];
-          await supabase.storage.from('portfolio-images').remove([filePath]);
-        }
-      }
-
+      // API handles DB and storage deletion
       const res = await fetch(`/api/admin/collaborators/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete from DB");
       

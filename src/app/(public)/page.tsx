@@ -138,8 +138,9 @@ export default async function Home() {
             })}
           </div>
         ) : (
-          <div className="text-center text-gray-500 py-12 border-2 border-dashed border-gray-200 rounded-2xl">
-            More projects coming soon!
+          <div className="text-center py-16 bg-white/50 backdrop-blur-sm rounded-3xl border border-gray-100 shadow-sm">
+            <h3 className="text-xl font-bold text-visionify-navy mb-2">Curating Our Best Work</h3>
+            <p className="text-gray-500 font-medium">A selection of our finest designs is currently being prepared for this showcase.</p>
           </div>
         )}
       </section>

@@ -10,60 +10,40 @@ export const metadata = {
 
 export const revalidate = 60;
 
-const baseCategories = [
-  { 
-    id: "event-banners", 
-    title: "Event Banners", 
-    desc: "High-impact creatives made to capture attention.", 
-    bg: "bg-purple-50" 
-  },
-  { 
-    id: "brand-promotions", 
-    title: "Brand Promotions", 
-    desc: "Scroll-stopping designs for campaigns and social media.", 
-    bg: "bg-cyan-50" 
-  },
-  { 
-    id: "logos", 
-    title: "Logos", 
-    desc: "Distinct visual identities built to be remembered.", 
-    bg: "bg-indigo-50" 
-  },
-  { 
-    id: "business-cards", 
-    title: "Business Cards", 
-    desc: "Premium first impressions for professionals and brands.", 
-    bg: "bg-orange-50" 
-  },
-  { 
-    id: "wedding-cards", 
-    title: "Wedding Cards", 
-    desc: "Elegant invitations for your most special celebrations.", 
-    bg: "bg-pink-50" 
-  },
-  { 
-    id: "private-party-posters", 
-    title: "Private Party Posters", 
-    desc: "Vibrant and exclusive poster designs for private events.", 
-    bg: "bg-blue-50" 
-  }
-];
-
 export default async function WorkPage() {
-  // Fetch the latest active image for each category to use as the preview
+  // Fetch dynamic categories
+  const { data: dbCategories } = await supabase
+    .from("portfolio_categories")
+    .select("slug, name, description, cover_image_url")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true });
+
+  // Fetch the latest active image for each category to use as the fallback preview
   const { data: latestItems } = await supabase
     .from("portfolio_items")
     .select("category, image_url")
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
-  // Map latest image to category
-  const categories = baseCategories.map(cat => {
-    const latestItem = latestItems?.find(item => item.category === cat.id);
+  const bgColors = [
+    "bg-purple-50",
+    "bg-cyan-50",
+    "bg-indigo-50",
+    "bg-orange-50",
+    "bg-pink-50",
+    "bg-blue-50"
+  ];
+
+  // Map latest image to category if no cover is set
+  const categories = (dbCategories || []).map((cat, idx) => {
+    const latestItem = latestItems?.find(item => item.category === cat.slug);
     return {
-      ...cat,
-      // If no image is uploaded yet, we show a transparent placeholder or let the colored bg shine
-      image: latestItem?.image_url || null
+      id: cat.slug,
+      title: cat.name,
+      desc: cat.description || "Explore our premium creations in this category.",
+      bg: bgColors[idx % bgColors.length],
+      // Fallback logic
+      image: cat.cover_image_url || latestItem?.image_url || null
     };
   });
 
@@ -116,8 +96,9 @@ export default async function WorkPage() {
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 font-medium">
-                    Coming Soon
+                  <div className="w-full h-full border-2 border-dashed border-gray-200/60 rounded-lg flex flex-col items-center justify-center text-gray-500 font-medium bg-white/40">
+                    <span className="text-xl mb-1">✧</span>
+                    <span className="text-sm">Curating Collection</span>
                   </div>
                 )}
                 {/* Glossy Flash Effect */}

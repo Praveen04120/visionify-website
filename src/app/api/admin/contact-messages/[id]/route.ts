@@ -12,7 +12,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { status } = body;
 
     const { data, error } = await supabaseAdmin
-      .from("contact_messages")
+      .from("quote_requests")
       .update({ status })
       .eq("id", resolvedParams.id)
       .select()

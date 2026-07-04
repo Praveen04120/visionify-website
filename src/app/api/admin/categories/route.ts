@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { name, slug, description, display_order, is_active } = await request.json();
+    const { name, slug, description, display_order, is_active, cover_image_url } = await request.json();
 
     if (!name || !slug) {
       return NextResponse.json({ error: "Name and slug are required" }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
           description: description || null,
           display_order: display_order || 0,
           is_active: is_active ?? true,
+          cover_image_url: cover_image_url || null,
         },
       ])
       .select()

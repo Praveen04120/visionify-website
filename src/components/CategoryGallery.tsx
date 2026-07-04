@@ -87,8 +87,8 @@ export default function CategoryGallery({ items, categoryTitle, accentColor }: {
             <div className="w-16 h-16 bg-visionify-offwhite rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="text-gray-400 w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-bold text-visionify-navy mb-2">Your Visionify work will appear here soon.</h3>
-            <p className="text-gray-500">New creative projects are being added.</p>
+            <h3 className="text-2xl font-bold text-visionify-navy mb-2">Curating Collection</h3>
+            <p className="text-gray-500">Our finest designs for this category are currently being prepared.</p>
           </div>
         )}
       </div>
