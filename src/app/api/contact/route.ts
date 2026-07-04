@@ -11,16 +11,14 @@ export async function POST(request: Request) {
     }
 
     const { data, error } = await supabase
-      .from("quote_requests")
+      .from("contact_messages")
       .insert([
         {
           name,
           email,
           phone,
-          project_type: subject,
-          budget_range: "Contact Form",
-          project_details: message,
-          form_type: 'contact',
+          subject,
+          message,
           status: 'new'
         }
       ]);

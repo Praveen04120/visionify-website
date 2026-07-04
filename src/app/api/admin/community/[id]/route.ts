@@ -9,7 +9,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
   try {
     const { status } = await request.json();
     const { data, error } = await supabaseAdmin
-      .from("quote_requests")
+      .from("community_applications")
       .update({ status })
       .eq("id", (await context.params).id)
       .select()
@@ -28,7 +28,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
 
   try {
     const { error } = await supabaseAdmin
-      .from("quote_requests")
+      .from("community_applications")
       .delete()
       .eq("id", (await context.params).id);
 

@@ -11,16 +11,14 @@ export async function POST(request: Request) {
     }
 
     const { data, error } = await supabase
-      .from("quote_requests")
+      .from("community_applications")
       .insert([
         {
           name,
           email,
           phone,
-          project_type: "Community Collaboration",
-          budget_range: community_name, // Temporarily store community_name in budget_range if we don't have another field, or wait, user said form_type="community_collaboration", project_type="Community Collaboration", project_details=message. Let's see mapping!
-          project_details: message,
-          form_type: 'community_collaboration',
+          community_name,
+          message,
           status: 'new'
         }
       ]);

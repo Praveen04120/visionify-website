@@ -8,26 +8,15 @@ export async function GET() {
 
   // Fetch community applications from quote_requests table
   const { data, error } = await supabaseAdmin
-    .from("quote_requests")
+    .from("community_applications")
     .select("*")
-    .eq("form_type", "community_collaboration")
     .order("created_at", { ascending: false });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Map back to community applications format
-  const mappedData = data ? data.map(item => ({
-    id: item.id,
-    name: item.name,
-    email: item.email,
-    phone: item.phone,
-    community_name: item.budget_range,
-    message: item.project_details,
-    status: item.status,
-    created_at: item.created_at
-  })) : [];
+  const mappedData = data || [];
 
   return NextResponse.json(mappedData);
 }
