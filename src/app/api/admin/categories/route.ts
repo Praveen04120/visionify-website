@@ -7,9 +7,8 @@ export async function GET() {
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data, error } = await supabaseAdmin
-    .from("portfolio_items")
+    .from("portfolio_categories")
     .select("*")
-    .order("category", { ascending: true })
     .order("display_order", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -21,31 +20,18 @@ export async function POST(request: Request) {
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const body = await request.json();
-    const { title, category, image_url, description, display_order, is_active } = body;
+    const { name, slug, description, display_order, is_active } = await request.json();
 
-    if (!title || !category || !image_url) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    // Verify category exists
-    const { data: categoryData } = await supabaseAdmin
-      .from("portfolio_categories")
-      .select("slug")
-      .eq("slug", category)
-      .single();
-      
-    if (!categoryData) {
-      return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    if (!name || !slug) {
+      return NextResponse.json({ error: "Name and slug are required" }, { status: 400 });
     }
 
     const { data, error } = await supabaseAdmin
-      .from("portfolio_items")
+      .from("portfolio_categories")
       .insert([
         {
-          title,
-          category,
-          image_url,
+          name,
+          slug,
           description: description || null,
           display_order: display_order || 0,
           is_active: is_active ?? true,

@@ -44,8 +44,8 @@ export default async function Home() {
                 {/* Glossy hover sweep */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full skew-x-[-20deg] transition-all duration-700 group-hover:translate-x-[200%] z-0 pointer-events-none"></div>
               </Link>
-              <Link href="/get-a-quote" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-visionify-navy bg-white/90 backdrop-blur-sm border border-white hover:border-visionify-cyan shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 active:scale-95 text-center flex items-center justify-center">
-                Start a Project
+              <Link href="/contact" className="min-h-[48px] px-8 py-3.5 rounded-full font-semibold text-visionify-navy bg-white/90 backdrop-blur-sm border border-white hover:border-visionify-cyan shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 active:scale-95 text-center flex items-center justify-center">
+                Contact Us
               </Link>
             </div>
           </div>

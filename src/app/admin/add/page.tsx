@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { UploadCloud, CheckCircle2 } from "lucide-react";
@@ -10,26 +10,30 @@ export default function AddPortfolioItem() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState<any[]>([]);
   
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   
   const [formData, setFormData] = useState({
     title: "",
-    category: "event-banners",
+    category: "",
     description: "",
     display_order: 0,
     is_active: true
   });
 
-  const categories = [
-    { value: "event-banners", label: "Event Banners" },
-    { value: "brand-promotions", label: "Brand Promotions" },
-    { value: "logos", label: "Logos" },
-    { value: "business-cards", label: "Business Cards" },
-    { value: "wedding-cards", label: "Wedding Cards" },
-    { value: "private-party-posters", label: "Private Party Posters" },
-  ];
+  useEffect(() => {
+    fetch("/api/categories")
+      .then(res => res.json())
+      .then(data => {
+        setCategories(data);
+        if (data.length > 0) {
+          setFormData(prev => ({ ...prev, category: data[0].slug }));
+        }
+      })
+      .catch(err => console.error("Failed to load categories:", err));
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -43,6 +47,10 @@ export default function AddPortfolioItem() {
     e.preventDefault();
     if (!file) {
       setError("Please select an image");
+      return;
+    }
+    if (!formData.category) {
+      setError("Please select a category");
       return;
     }
     
@@ -82,7 +90,7 @@ export default function AddPortfolioItem() {
       setPreviewUrl("");
       setFormData({
         title: "",
-        category: "event-banners",
+        category: categories.length > 0 ? categories[0].slug : "",
         description: "",
         display_order: 0,
         is_active: true
@@ -166,7 +174,8 @@ export default function AddPortfolioItem() {
                   onChange={e => setFormData({...formData, category: e.target.value})}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-visionify-cyan/20 focus:border-visionify-cyan outline-none transition-all"
                 >
-                  {categories.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                  <option value="" disabled>Select a category</option>
+                  {categories.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)}
                 </select>
               </div>
               

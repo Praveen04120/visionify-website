@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Camera, Mail, Phone } from "lucide-react";
-import ContactForm from "./ContactForm";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,21 +11,6 @@ export default function Footer() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Contact Form Section */}
-        <div className="mb-20">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-visionify-navy tracking-tight mb-4">
-              Get in Touch
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto font-medium">
-              Have a project in mind or just want to say hi? Drop us a message below and we'll get back to you as soon as possible.
-            </p>
-          </div>
-          <div className="max-w-2xl mx-auto">
-            <ContactForm />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-2">
@@ -65,7 +49,10 @@ export default function Footer() {
                 <Link href="/collaborations" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Collaborations</Link>
               </li>
               <li>
-                <Link href="/get-a-quote" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Get a Quote</Link>
+                <Link href="/community-collaborations" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Community Collabs</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="flex items-center min-h-[48px] md:min-h-0 hover:text-visionify-cyan active:text-visionify-purple transition-colors">Contact Us</Link>
               </li>
             </ul>
           </div>
@@ -109,3 +96,4 @@ export default function Footer() {
     </footer>
   );
 }
+

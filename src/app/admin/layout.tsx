@@ -25,8 +25,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
     { name: "Manage Portfolio", href: "/admin/manage", icon: <ImageIcon size={20} /> },
     { name: "Add New Item", href: "/admin/add", icon: <PlusCircle size={20} /> },
-    { name: "Quote Requests", href: "/admin/quotes", icon: <MessageSquare size={20} /> },
+    { name: "Categories", href: "/admin/categories", icon: <LayoutDashboard size={20} /> },
     { name: "Contact Messages", href: "/admin/contact-messages", icon: <Mailbox size={20} /> },
+    { name: "Community Apps", href: "/admin/community-applications", icon: <MessageSquare size={20} /> },
+    { name: "Collaborators", href: "/admin/collaborators", icon: <ImageIcon size={20} /> },
   ];
 
   const SidebarContent = () => (

@@ -23,8 +23,8 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Our Work", href: "/work" },
     { name: "Collaborations", href: "/collaborations" },
-    { name: "Pricing / Get a Quote", href: "/get-a-quote" },
-    { name: "Contact Us", href: "/#contact" },
+    { name: "Community Collaborations", href: "/community-collaborations" },
+    { name: "Contact Us", href: "/contact" },
   ];
 
   const isActive = (href: string) => {
@@ -64,6 +64,9 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => {
+              // Skip the last item (Contact Us) in this map, because we render it as a button
+              if (link.name === "Contact Us") return null;
+              
               const active = isActive(link.href);
               return (
                 <Link
@@ -79,10 +82,10 @@ export default function Navbar() {
               );
             })}
             <Link
-              href="/get-a-quote"
+              href="/contact"
               className="px-6 py-2.5 rounded-full font-semibold text-sm text-white bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple hover:shadow-[0_0_20px_rgba(34,230,213,0.5)] transition-all duration-300 hover:-translate-y-0.5"
             >
-              Start a Project
+              Contact Us
             </Link>
           </div>
 
@@ -106,6 +109,7 @@ export default function Navbar() {
       >
         <div className="px-4 pt-2 pb-6 space-y-2 flex flex-col">
           {navLinks.map((link) => {
+            if (link.name === "Contact Us") return null;
             const active = isActive(link.href);
             return (
               <Link
@@ -122,11 +126,11 @@ export default function Navbar() {
           })}
           <div className="pt-2">
             <Link
-              href="/get-a-quote"
+              href="/contact"
               className="flex items-center justify-center min-h-[48px] px-6 py-2 rounded-full font-semibold text-base text-white bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple shadow-md active:scale-95 transition-all duration-300"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Start a Project
+              Contact Us
             </Link>
           </div>
         </div>
@@ -134,3 +138,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

@@ -2,15 +2,6 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { verifySession } from "@/lib/session";
 
-const validCategories = [
-  "event-banners",
-  "brand-promotions",
-  "logos",
-  "business-cards",
-  "wedding-cards",
-  "private-party-posters"
-];
-
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const isAdmin = await verifySession();
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,8 +11,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json();
     const { title, category, description, display_order, is_active } = body;
 
-    if (category && !validCategories.includes(category)) {
-      return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    if (category) {
+      // Verify category exists
+      const { data: categoryData } = await supabaseAdmin
+        .from("portfolio_categories")
+        .select("slug")
+        .eq("slug", category)
+        .single();
+        
+      if (!categoryData) {
+        return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+      }
     }
 
     const { data, error } = await supabaseAdmin
