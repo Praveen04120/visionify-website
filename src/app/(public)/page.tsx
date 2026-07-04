@@ -7,15 +7,42 @@ import { supabase } from "@/lib/supabase";
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch up to 5 newest portfolio items for the homepage preview
+  // Fetch dynamic categories
+  const { data: dbCategories } = await supabase
+    .from("portfolio_categories")
+    .select("*")
+    .eq("is_active", true)
+    .neq("slug", "_collaborators_")
+    .order("display_order", { ascending: true });
+
+  // Fetch the latest active image for each category to use as the fallback preview
   const { data: latestItems } = await supabase
     .from("portfolio_items")
-    .select("id, title, category, image_url")
+    .select("category, image_url")
     .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(5);
+    .order("created_at", { ascending: false });
 
-  const previewWorks = latestItems || [];
+  const bgColors = [
+    "bg-purple-50",
+    "bg-cyan-50",
+    "bg-indigo-50",
+    "bg-orange-50",
+    "bg-pink-50",
+    "bg-blue-50"
+  ];
+
+  // Map latest image to category if no cover is set
+  const categories = (dbCategories || []).map((cat, idx) => {
+    const latestItem = latestItems?.find(item => item.category === cat.slug);
+    return {
+      id: cat.slug,
+      title: cat.name,
+      desc: cat.description || "Explore our premium creations in this category.",
+      bg: bgColors[idx % bgColors.length],
+      // Fallback logic
+      image: cat.cover_image_url || latestItem?.image_url || null
+    };
+  });
 
   return (
     <div className="relative overflow-hidden selection:bg-visionify-cyan selection:text-white">
@@ -98,44 +125,48 @@ export default async function Home() {
           <p className="text-gray-500 font-medium max-w-2xl mx-auto">Every design is created to capture attention, communicate clearly, and leave a lasting impression.</p>
         </div>
 
-        {previewWorks.length > 0 ? (
+        {categories.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {previewWorks.map((work, idx) => {
-              const bgColors = [
-                "bg-purple-50",
-                "bg-cyan-50",
-                "bg-indigo-50",
-                "bg-orange-50",
-                "bg-pink-50",
-                "bg-blue-50"
-              ];
-              
-              return (
-                <Link href={`/work/${work.category}`} key={work.id} className="group bg-white rounded-[24px] p-4 shadow-sm hover:shadow-xl border border-[rgba(10,16,61,0.08)] transition-all duration-300 flex flex-col">
-                  {/* Image Container with Padding and Pastel Background */}
-                  <div className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden ${bgColors[idx % bgColors.length]} mb-6 flex items-center justify-center p-4`}>
+            {categories.map((category) => (
+              <Link 
+                href={`/work/${category.id}`} 
+                key={category.id} 
+                className="group bg-white rounded-[24px] p-4 shadow-sm hover:shadow-[0_8px_30px_rgba(34,230,213,0.15)] border border-[rgba(10,16,61,0.08)] hover:border-visionify-cyan/30 transition-all duration-300 hover:-translate-y-1 flex flex-col active:scale-95"
+              >
+                {/* Image Container with Padding and Pastel Background */}
+                <div className={`relative w-full aspect-[4/3] rounded-[16px] overflow-hidden ${category.bg} mb-6 flex items-center justify-center p-4`}>
+                  {category.image ? (
                     <div className="relative w-full h-full rounded-lg overflow-hidden shadow-sm">
                       <Image 
-                        src={work.image_url} 
-                        alt={work.title} 
+                        src={category.image} 
+                        alt={category.title} 
                         fill 
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
-                    {/* Glossy Flash Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full skew-x-[-20deg] transition-all duration-700 group-hover:translate-x-[200%] z-10 pointer-events-none"></div>
+                  ) : (
+                    <div className="w-full h-full border-2 border-dashed border-gray-200/60 rounded-lg flex flex-col items-center justify-center text-gray-500 font-medium bg-white/40">
+                      <span className="text-xl mb-1">✧</span>
+                      <span className="text-sm">Curating Collection</span>
+                    </div>
+                  )}
+                  {/* Glossy Flash Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full skew-x-[-20deg] transition-all duration-700 group-hover:translate-x-[200%] z-10 pointer-events-none"></div>
+                </div>
+                
+                {/* Content Below Image */}
+                <div className="px-2 pb-2 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-xl font-bold text-visionify-navy mb-2">{category.title}</h4>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{category.desc}</p>
                   </div>
-                  
-                  {/* Content Below Image */}
-                  <div className="px-2 pb-2">
-                    <h4 className="text-xl font-bold text-visionify-navy mb-1">{work.title}</h4>
-                    <p className="text-visionify-electric font-semibold flex items-center gap-2 group-hover:text-visionify-purple transition-colors duration-300">
-                      View Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
+                  <p className="text-visionify-electric font-semibold flex items-center gap-2 group-hover:text-visionify-purple transition-colors duration-300">
+                    View Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         ) : (
           <div className="text-center py-16 bg-white/50 backdrop-blur-sm rounded-3xl border border-gray-100 shadow-sm">

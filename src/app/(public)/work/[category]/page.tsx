@@ -4,50 +4,39 @@ import { ArrowLeft } from "lucide-react";
 import CategoryGallery from "@/components/CategoryGallery";
 import { supabase } from "@/lib/supabase";
 
-const categoryMap: Record<string, { title: string, description: string, accentColor: string }> = {
-  "event-banners": {
-    title: "Event Banners",
-    description: "Striking banners designed to set the tone for your events.",
-    accentColor: "bg-visionify-cyan",
-  },
-  "brand-promotions": {
-    title: "Brand Promotions",
-    description: "Scroll-stopping social media creatives and digital ad designs.",
-    accentColor: "bg-visionify-purple",
-  },
-  "logos": {
-    title: "Logos & Identity",
-    description: "Memorable logos and complete brand identity packages.",
-    accentColor: "bg-visionify-electric",
-  },
-  "business-cards": {
-    title: "Business Cards",
-    description: "Premium business card designs that leave a lasting impression.",
-    accentColor: "bg-visionify-cyan",
-  },
-  "wedding-cards": {
-    title: "Wedding Cards",
-    description: "Elegant, bespoke invitation designs for your special day.",
-    accentColor: "bg-visionify-pink",
-  },
-  "private-party-posters": {
-    title: "Private Party Posters",
-    description: "Vibrant and exclusive poster designs for private events.",
-    accentColor: "bg-visionify-purple",
-  },
-};
+// Colors array for fallback accent colors
+const fallbackColors = [
+  "bg-visionify-cyan",
+  "bg-visionify-purple",
+  "bg-visionify-electric",
+  "bg-visionify-pink",
+];
 
-export function generateStaticParams() {
-  return Object.keys(categoryMap).map((category) => ({
-    category,
+export async function generateStaticParams() {
+  const { data: categories } = await supabase
+    .from("portfolio_categories")
+    .select("slug")
+    .eq("is_active", true)
+    .neq("slug", "_collaborators_");
+
+  if (!categories) return [];
+
+  return categories.map((cat) => ({
+    category: cat.slug,
   }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
   const resolvedParams = await params;
-  const meta = categoryMap[resolvedParams.category];
-  if (!meta) return { title: "Not Found | Visionify" };
-  return { title: `${meta.title} | Our Work | Visionify`, description: meta.description };
+  
+  const { data: category } = await supabase
+    .from("portfolio_categories")
+    .select("name, description")
+    .eq("slug", resolvedParams.category)
+    .single();
+
+  if (!category) return { title: "Not Found | Visionify" };
+  return { title: `${category.name} | Our Work | Visionify`, description: category.description || `Explore our ${category.name} portfolio.` };
 }
 
 // Ensure the route is dynamically rendered or revalidated as needed
@@ -56,18 +45,26 @@ export const revalidate = 60;
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const resolvedParams = await params;
-  const category = resolvedParams.category;
-  const meta = categoryMap[category];
+  const categorySlug = resolvedParams.category;
+
+  const { data: meta } = await supabase
+    .from("portfolio_categories")
+    .select("*")
+    .eq("slug", categorySlug)
+    .single();
 
   if (!meta) {
     notFound();
   }
 
+  // Derive an accent color based on display order or fallback
+  const accentColor = fallbackColors[(meta.display_order || 0) % fallbackColors.length];
+
   // Fetch dynamic items from Supabase
   const { data: items, error } = await supabase
     .from("portfolio_items")
     .select("id, title, image_url")
-    .eq("category", category)
+    .eq("category", categorySlug)
     .eq("is_active", true)
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -90,18 +87,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </Link>
           <span className="text-sm font-bold tracking-widest text-visionify-cyan uppercase mb-4 block">Portfolio Collection</span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-visionify-navy mb-6">
-            {meta.title}
+            {meta.name}
           </h1>
           <div className="w-20 h-1 bg-gradient-to-r from-visionify-cyan via-visionify-electric to-visionify-purple mb-6 rounded-full"></div>
           <p className="text-lg text-gray-700 max-w-2xl font-medium leading-relaxed">
-            {meta.description}
+            {meta.description || `Explore our latest creations in the ${meta.name} portfolio.`}
           </p>
         </div>
       </section>
 
       {/* Portfolio Gallery */}
       <section className="pb-16 px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-        <CategoryGallery items={mappedItems} categoryTitle={meta.title} accentColor={meta.accentColor} />
+        <CategoryGallery items={mappedItems} categoryTitle={meta.name} accentColor={accentColor} />
       </section>
 
       {/* Bottom CTA */}

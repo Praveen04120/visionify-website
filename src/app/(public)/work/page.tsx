@@ -14,8 +14,9 @@ export default async function WorkPage() {
   // Fetch dynamic categories
   const { data: dbCategories } = await supabase
     .from("portfolio_categories")
-    .select("slug, name, description, cover_image_url")
+    .select("*")
     .eq("is_active", true)
+    .neq("slug", "_collaborators_")
     .order("display_order", { ascending: true });
 
   // Fetch the latest active image for each category to use as the fallback preview
