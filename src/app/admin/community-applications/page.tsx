@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquare, Mail, Phone, Calendar, Trash2, MapPin } from "lucide-react";
+import { MessageSquare, Mail, Phone, Calendar, Trash2, MapPin, Users } from "lucide-react";
 
 export default function CommunityApplications() {
   const [apps, setApps] = useState<any[]>([]);
@@ -96,19 +96,21 @@ export default function CommunityApplications() {
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h2 className="text-xl font-bold text-visionify-navy">{app.name}</h2>
-                    <span className="text-sm font-medium text-visionify-purple bg-visionify-purple/10 px-2 py-0.5 rounded-md">
-                      {app.project_type || "N/A"}
+                    <span className="text-sm font-medium text-visionify-purple bg-visionify-purple/10 px-2 py-0.5 rounded-md flex items-center gap-1.5">
+                      <Users size={14}/> {app.community_name || "N/A"}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                     <span className="flex items-center gap-1.5"><Mail size={16} className="text-gray-400"/> {app.email}</span>
                     {app.phone && <span className="flex items-center gap-1.5"><Phone size={16} className="text-gray-400"/> {app.phone}</span>}
-                    {app.budget_range && <span className="flex items-center gap-1.5"><Calendar size={16} className="text-gray-400"/> Date: {app.budget_range}</span>}
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed border border-gray-100">
-                  {app.project_details}
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Community Message / Requirements</label>
+                  <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed border border-gray-100 whitespace-pre-wrap">
+                    {app.message}
+                  </div>
                 </div>
                 
                 <div className="text-xs text-gray-400 font-medium">

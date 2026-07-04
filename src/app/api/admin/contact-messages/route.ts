@@ -9,7 +9,7 @@ export async function GET() {
   const { data, error } = await supabaseAdmin
     .from("quote_requests")
     .select("*")
-    .eq("budget_range", "Contact Form")
+    .eq("form_type", "contact")
     .order("created_at", { ascending: false });
 
   // Map back to the expected contact_messages format for the frontend

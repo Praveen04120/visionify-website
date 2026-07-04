@@ -16,10 +16,11 @@ export async function POST(request: Request) {
         {
           name,
           email,
-          phone: phone || null,
+          phone,
           project_type: subject,
           budget_range: "Contact Form",
           project_details: message,
+          form_type: 'contact',
           status: 'new'
         }
       ]);

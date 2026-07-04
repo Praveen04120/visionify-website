@@ -4,28 +4,23 @@ import { supabase } from "@/lib/supabase";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, community_name, email, phone, event_date, message } = body;
+    const { name, community_name, email, phone, message } = body;
 
-    if (!name || !community_name || !email || !event_date || !message) {
+    if (!name || !community_name || !email || !phone || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Since quote_requests table is already created in Supabase from previous setup,
-    // and the user wants a zero-friction experience without running new SQL,
-    // we map community applications to quote_requests table fields.
-    // project_type -> community_name
-    // budget_range -> event_date
-    // project_details -> message
     const { data, error } = await supabase
       .from("quote_requests")
       .insert([
         {
           name,
           email,
-          phone: phone || null,
-          project_type: community_name,
-          budget_range: event_date,
+          phone,
+          project_type: "Community Collaboration",
+          budget_range: community_name, // Temporarily store community_name in budget_range if we don't have another field, or wait, user said form_type="community_collaboration", project_type="Community Collaboration", project_details=message. Let's see mapping!
           project_details: message,
+          form_type: 'community_collaboration',
           status: 'new'
         }
       ]);

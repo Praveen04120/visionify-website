@@ -118,28 +118,17 @@ export default function CommunityForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="comm_phone" className="text-sm font-semibold text-visionify-navy">Phone (Optional)</label>
+            <label htmlFor="comm_phone" className="text-sm font-semibold text-visionify-navy">Mobile Number <span className="text-visionify-pink">*</span></label>
             <input 
               type="tel" 
               id="comm_phone" 
+              required
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})}
               placeholder="+91 98765 43210" 
               className="w-full px-4 py-2.5 rounded-xl bg-gray-50/50 border border-gray-200 focus:border-visionify-cyan focus:ring-2 focus:ring-visionify-cyan/20 transition-all outline-none" 
             />
           </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <label htmlFor="comm_date" className="text-sm font-semibold text-visionify-navy">Expected Event Date <span className="text-visionify-pink">*</span></label>
-          <input 
-            type="date" 
-            id="comm_date" 
-            required 
-            value={formData.event_date}
-            onChange={e => setFormData({...formData, event_date: e.target.value})}
-            className="w-full px-4 py-2.5 rounded-xl bg-gray-50/50 border border-gray-200 focus:border-visionify-purple focus:ring-2 focus:ring-visionify-purple/20 transition-all outline-none text-gray-700"
-          />
         </div>
 
         <div className="space-y-1.5">
