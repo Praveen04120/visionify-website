@@ -11,43 +11,51 @@ export default function AdminDashboard() {
     newContacts: 0,
     categories: [] as { name: string; count: number }[],
   });
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [portfolioRes, quotesRes, contactsRes] = await Promise.all([
+        const [portfolioRes, contactsRes, communityRes, categoriesRes] = await Promise.all([
           fetch("/api/admin/portfolio"),
-          fetch("/api/admin/quotes"),
-          fetch("/api/admin/contact-messages")
+          fetch("/api/admin/contact-messages"),
+          fetch("/api/admin/community"),
+          fetch("/api/admin/categories")
         ]);
 
-        if (portfolioRes.ok && quotesRes.ok && contactsRes.ok) {
-          const portfolio = await portfolioRes.json();
-          const quotes = await quotesRes.json();
-          const contacts = await contactsRes.json();
-
-          const activeCount = portfolio.filter((i: any) => i.is_active).length;
-          const newQuotesCount = quotes.filter((q: any) => q.status === 'new').length;
-          const newContactsCount = contacts.filter((c: any) => c.status === 'new').length;
-
-          // Category counts
-          const counts: Record<string, number> = {};
-          portfolio.forEach((item: any) => {
-            counts[item.category] = (counts[item.category] || 0) + 1;
-          });
-          const categoryArray = Object.keys(counts).map(k => ({ name: k, count: counts[k] }));
-
-          setStats({
-            totalItems: portfolio.length,
-            activeItems: activeCount,
-            newQuotes: newQuotesCount,
-            newContacts: newContactsCount,
-            categories: categoryArray,
-          });
+        if (!portfolioRes.ok || !contactsRes.ok || !communityRes.ok || !categoriesRes.ok) {
+          throw new Error("Failed to fetch dashboard data.");
         }
-      } catch (err) {
+
+        const portfolio = await portfolioRes.json();
+        const contacts = await contactsRes.json();
+        const community = await communityRes.json();
+        const categories = await categoriesRes.json();
+
+        const activeCount = portfolio.filter((i: any) => i.is_active).length;
+        const newQuotesCount = contacts.filter((c: any) => c.status === 'new').length;
+        const newContactsCount = community.filter((c: any) => c.status === 'new').length;
+
+        // Ensure we only show active creative categories, excluding collaborators
+        const activeCategories = categories.filter((c: any) => c.is_active && c.slug !== '_collaborators_');
+        
+        const categoryArray = activeCategories.map((cat: any) => {
+          const count = portfolio.filter((p: any) => p.category === cat.slug).length;
+          return { name: cat.name, count };
+        });
+
+        setStats({
+          totalItems: portfolio.length,
+          activeItems: activeCount,
+          newQuotes: newQuotesCount,
+          newContacts: newContactsCount,
+          categories: categoryArray,
+        });
+        setError(null);
+      } catch (err: any) {
         console.error(err);
+        setError("Unable to load dashboard data. Please try refreshing.");
       } finally {
         setLoading(false);
       }
@@ -58,6 +66,15 @@ export default function AdminDashboard() {
 
   if (loading) {
     return <div className="p-8 text-center text-gray-500 font-medium">Loading Dashboard...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center text-red-500 font-medium bg-red-50/50 rounded-xl border border-red-100 flex flex-col items-center justify-center">
+        <AlertCircle className="w-12 h-12 text-red-400 mb-3 mx-auto" />
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
