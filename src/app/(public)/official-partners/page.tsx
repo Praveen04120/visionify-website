@@ -58,12 +58,12 @@ export default async function OfficialPartnersPage() {
                   {/* Logo Display */}
                   <div className="w-full md:w-2/5 flex justify-center">
                     <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-full p-1 bg-gradient-to-tr from-visionify-cyan via-visionify-electric to-visionify-purple shadow-xl">
-                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center p-8 relative overflow-hidden">
+                      <div className="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden">
                         <Image 
                           src={partner.image_url} 
                           alt={`${partner.title} Logo`}
                           fill
-                          className="object-contain p-8 relative z-10"
+                          className="object-cover rounded-full"
                         />
                       </div>
                     </div>
