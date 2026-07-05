@@ -5,6 +5,9 @@ import Image from "next/image";
 import { Edit2, Trash2, CheckCircle, XCircle, Plus, Link as LinkIcon, Upload } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '@/lib/cropImage';
+
 export default function ManageCollaborators() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +24,13 @@ export default function ManageCollaborators() {
   });
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+
+  // Crop states
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -42,8 +52,36 @@ export default function ManageCollaborators() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setImageToCrop(imageUrl);
+      setShowCropModal(true);
+      // We don't setFile here, we wait for the crop!
     }
+  };
+
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleApplyCrop = async () => {
+    try {
+      if (imageToCrop && croppedAreaPixels) {
+        const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+        if (croppedBlob) {
+          const croppedFile = new File([croppedBlob], "partner-logo.png", { type: "image/png" });
+          setFile(croppedFile);
+          
+          // Show preview immediately
+          setFormData({ ...formData, image_url: URL.createObjectURL(croppedBlob) });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to crop image. Please try again.");
+    }
+    setShowCropModal(false);
+    setImageToCrop(null);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -225,6 +263,57 @@ export default function ManageCollaborators() {
               </button>
             </div>
           </form>
+
+          {/* Crop Modal */}
+          {showCropModal && imageToCrop && (
+            <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl">
+                <h3 className="text-xl font-bold mb-4">Crop Partner Logo</h3>
+                <p className="text-gray-500 mb-4 text-sm">Position the logo perfectly inside the circle.</p>
+                <div className="relative w-full h-80 bg-gray-100 rounded-2xl overflow-hidden mb-6">
+                  <Cropper
+                    image={imageToCrop}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    cropShape="round"
+                    showGrid={false}
+                    onCropChange={setCrop}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="text-sm font-semibold text-gray-700 block mb-2">Zoom</label>
+                  <input
+                    type="range"
+                    value={zoom}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    onChange={(e) => setZoom(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => { setShowCropModal(false); setImageToCrop(null); }}
+                    className="px-5 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleApplyCrop}
+                    className="px-5 py-2 bg-visionify-cyan text-white rounded-lg hover:bg-cyan-500 font-medium"
+                  >
+                    Apply Crop
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
