@@ -28,8 +28,8 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-bold text-visionify-navy text-lg">Email Us</h3>
                 <p className="text-gray-500 mt-1">Our friendly team is here to help.</p>
-                <a href="mailto:official.visionify@gmail.com" className="text-visionify-purple font-medium hover:underline mt-2 block break-all">
-                  official.visionify@gmail.com
+                <a href="mailto:contact@visionify.co.in" className="text-visionify-purple font-medium hover:underline mt-2 block break-all">
+                  contact@visionify.co.in
                 </a>
               </div>
             </div>

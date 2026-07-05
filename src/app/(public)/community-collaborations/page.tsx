@@ -49,8 +49,8 @@ export default function CommunityCollaborations() {
             <div className="pt-6 mt-6 border-t border-gray-100">
                <h3 className="font-bold text-visionify-navy text-lg mb-4">Quick Contact</h3>
                <div className="flex flex-col gap-3">
-                 <a href="mailto:official.visionify@gmail.com" className="flex items-center gap-3 text-gray-600 hover:text-visionify-cyan transition-colors font-medium">
-                   <Mail size={18} className="text-visionify-cyan" /> official.visionify@gmail.com
+                 <a href="mailto:contact@visionify.co.in" className="flex items-center gap-3 text-gray-600 hover:text-visionify-cyan transition-colors font-medium">
+                   <Mail size={18} className="text-visionify-cyan" /> contact@visionify.co.in
                  </a>
                  <a href="tel:+918306030996" className="flex items-center gap-3 text-gray-600 hover:text-visionify-cyan transition-colors font-medium">
                    <Phone size={18} className="text-visionify-purple" /> +91 83060 30996

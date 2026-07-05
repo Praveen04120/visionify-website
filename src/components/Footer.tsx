@@ -62,9 +62,9 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4 md:mb-6 text-visionify-navy">Contact Details</h4>
             <ul className="flex flex-col space-y-1 md:space-y-4 text-sm text-gray-700 font-medium">
               <li>
-                <a href="mailto:official.visionify@gmail.com" className="flex items-center min-h-[48px] md:min-h-0 gap-3 hover:text-visionify-cyan active:text-visionify-purple transition-colors group">
+                <a href="mailto:contact@visionify.co.in" className="flex items-center min-h-[48px] md:min-h-0 gap-3 hover:text-visionify-cyan active:text-visionify-purple transition-colors group">
                   <Mail size={18} className="text-visionify-purple group-hover:text-visionify-cyan group-active:text-visionify-purple" />
-                  <span className="break-all">official.visionify@gmail.com</span>
+                  <span className="break-all">contact@visionify.co.in</span>
                 </a>
               </li>
               <li>
