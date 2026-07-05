@@ -21,6 +21,7 @@
   --color-visionify-offwhite: #F7F8FC;
   --color-visionify-blush: #F5A8AE;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --breakpoint-lg: 60rem; /* 960px, ensuring mobile 980px desktop-mode hits lg */
 }
 
 @layer utilities {
