@@ -143,6 +143,7 @@ export default async function Home() {
                         fill 
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        loading="lazy"
                       />
                     </div>
                   ) : (

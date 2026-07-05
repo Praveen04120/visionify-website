@@ -8,8 +8,27 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://visionify.co.in"),
   title: "Visionify | Designing Ideas, Elevating Brands",
-  description: "Visionify is a creative design studio offering event banners, brand promotions, logos, business cards, wedding cards and private party posters.",
+  description: "Creative designs that make brands, events, and celebrations impossible to ignore.",
+  applicationName: "Visionify",
+  icons: {
+    icon: '/logo.jpeg',
+    apple: '/logo.jpeg',
+  },
+  openGraph: {
+    title: "Visionify | Designing Ideas, Elevating Brands",
+    description: "Creative designs that make brands, events, and celebrations impossible to ignore.",
+    siteName: "Visionify",
+    images: [
+      {
+        url: '/logo.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Visionify Logo'
+      }
+    ],
+  },
 };
 
 export default function RootLayout({
