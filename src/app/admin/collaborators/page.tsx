@@ -122,21 +122,40 @@ export default function ManageCollaborators() {
       let finalMouName = formData.mou_file_name;
 
       if (mouFile) {
+        if (mouFile.size > 10 * 1024 * 1024) {
+          throw new Error("MOU PDF file exceeds the 10MB limit.");
+        }
+        
         setUploadingMou(true);
-        const mouData = new FormData();
-        mouData.append("file", mouFile);
-
-        const mouUploadRes = await fetch("/api/admin/upload", {
-          method: "POST",
-          body: mouData
-        });
-
-        const mouUploadData = await mouUploadRes.json();
-        setUploadingMou(false);
-
-        if (!mouUploadRes.ok) throw new Error(mouUploadData.error || "Failed to upload MOU");
-        finalMouUrl = mouUploadData.url;
-        finalMouName = mouFile.name;
+        try {
+          // 1. Get signed upload URL
+          const signedRes = await fetch("/api/admin/upload/mou-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ filename: mouFile.name })
+          });
+          
+          if (!signedRes.ok) {
+            let errorMsg = "Failed to generate upload URL";
+            try { const d = await signedRes.json(); errorMsg = d.error || errorMsg; } catch (e) {}
+            throw new Error(errorMsg);
+          }
+          const { signedUrl, token, path, publicUrl } = await signedRes.json();
+          
+          // 2. Upload directly to Supabase using the frontend client to bypass Vercel limits
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('portfolio-images')
+            .uploadToSignedUrl(path, token, mouFile, {
+              contentType: 'application/pdf',
+            });
+            
+          if (uploadError) throw new Error(uploadError.message || "Direct upload to Supabase failed");
+          
+          finalMouUrl = publicUrl;
+          finalMouName = mouFile.name;
+        } finally {
+          setUploadingMou(false);
+        }
       }
 
       const url = editingId ? `/api/admin/collaborators/${editingId}` : "/api/admin/collaborators";
@@ -162,9 +181,14 @@ export default function ManageCollaborators() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        throw new Error(res.statusText || "Unexpected non-JSON response from server. Check request size or server logs.");
+      }
       
-      if (!res.ok) throw new Error(data.error || "Failed to save collaborator");
+      if (!res.ok) throw new Error(data?.error || "Failed to save collaborator");
 
       if (editingId) {
         setItems(items.map(i => i.id === editingId ? data : i));
