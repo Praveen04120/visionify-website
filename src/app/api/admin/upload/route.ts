@@ -20,14 +20,20 @@ export async function POST(request: Request) {
     }
 
     // Validate type
-    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg", "application/pdf"];
     if (!validTypes.includes(file.type)) {
-      return NextResponse.json({ error: "Invalid file type. Only JPG, PNG, WEBP allowed" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid file type. Only JPG, PNG, WEBP, and PDF allowed" }, { status: 400 });
     }
 
     // Generate unique path
-    const ext = file.name.split('.').pop() || 'jpg';
-    const filename = `${crypto.randomUUID()}.${ext}`;
+    const isPdf = file.type === "application/pdf";
+    const ext = file.name.split('.').pop() || (isPdf ? 'pdf' : 'jpg');
+    let filename = `${crypto.randomUUID()}.${ext}`;
+    
+    if (isPdf) {
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      filename = `partner-mous/${crypto.randomUUID()}/${sanitizedName}`;
+    }
     
     // Read file buffer
     const buffer = Buffer.from(await file.arrayBuffer());

@@ -20,10 +20,17 @@ export default function ManageCollaborators() {
     image_url: "",
     description: "",
     display_order: 0,
-    is_active: true
+    is_active: true,
+    contract_start_date: "",
+    contract_end_date: "",
+    about: "",
+    mou_url: "",
+    mou_file_name: ""
   });
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [mouFile, setMouFile] = useState<File | null>(null);
+  const [uploadingMou, setUploadingMou] = useState(false);
 
   // Crop states
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -111,10 +118,43 @@ export default function ManageCollaborators() {
         throw new Error("Logo image is required");
       }
 
+      let finalMouUrl = formData.mou_url;
+      let finalMouName = formData.mou_file_name;
+
+      if (mouFile) {
+        setUploadingMou(true);
+        const mouData = new FormData();
+        mouData.append("file", mouFile);
+
+        const mouUploadRes = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: mouData
+        });
+
+        const mouUploadData = await mouUploadRes.json();
+        setUploadingMou(false);
+
+        if (!mouUploadRes.ok) throw new Error(mouUploadData.error || "Failed to upload MOU");
+        finalMouUrl = mouUploadData.url;
+        finalMouName = mouFile.name;
+      }
+
       const url = editingId ? `/api/admin/collaborators/${editingId}` : "/api/admin/collaborators";
       const method = editingId ? "PUT" : "POST";
       
-      const payload = { ...formData, image_url: finalImageUrl };
+      // Validate Dates
+      if (formData.contract_start_date && formData.contract_end_date) {
+        if (new Date(formData.contract_end_date) < new Date(formData.contract_start_date)) {
+          throw new Error("End date cannot be earlier than start date");
+        }
+      }
+
+      const payload = { 
+        ...formData, 
+        image_url: finalImageUrl,
+        mou_url: finalMouUrl,
+        mou_file_name: finalMouName
+      };
 
       const res = await fetch(url, {
         method,
@@ -135,7 +175,8 @@ export default function ManageCollaborators() {
       setIsAdding(false);
       setEditingId(null);
       setFile(null);
-      setFormData({ title: "", image_url: "", description: "", display_order: 0, is_active: true });
+      setFormData({ title: "", image_url: "", description: "", display_order: 0, is_active: true, contract_start_date: "", contract_end_date: "", about: "", mou_url: "", mou_file_name: "" });
+      setMouFile(null);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -145,9 +186,21 @@ export default function ManageCollaborators() {
 
   const startEdit = (item: any) => {
     setEditingId(item.id);
-    setFormData(item);
+    setFormData({
+      title: item.title || "",
+      image_url: item.image_url || "",
+      description: item.description || "",
+      display_order: item.display_order || 0,
+      is_active: item.is_active ?? true,
+      contract_start_date: item.contract_start_date || "",
+      contract_end_date: item.contract_end_date || "",
+      about: item.about || "",
+      mou_url: item.mou_url || "",
+      mou_file_name: item.mou_file_name || ""
+    });
     setIsAdding(true);
     setFile(null);
+    setMouFile(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -175,7 +228,7 @@ export default function ManageCollaborators() {
         </div>
         {!isAdding && (
           <button 
-            onClick={() => { setIsAdding(true); setEditingId(null); setFile(null); setFormData({ title: "", image_url: "", description: "", display_order: 0, is_active: true }); }}
+            onClick={() => { setIsAdding(true); setEditingId(null); setFile(null); setMouFile(null); setFormData({ title: "", image_url: "", description: "", display_order: 0, is_active: true, contract_start_date: "", contract_end_date: "", about: "", mou_url: "", mou_file_name: "" }); }}
             className="flex items-center gap-2 px-4 py-2 bg-visionify-cyan text-white rounded-xl font-bold hover:bg-cyan-500 transition-colors"
           >
             <Plus size={20} /> Add Partner
@@ -231,6 +284,77 @@ export default function ManageCollaborators() {
                       </p>
                     </div>
                     <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} required={!formData.image_url} />
+                  </label>
+                </div>
+              </div>
+
+              {/* A. CONTRACT DURATION */}
+              <div className="md:col-span-2 pt-2 border-t mt-2">
+                <h3 className="font-semibold text-gray-700 mb-2">Partnership Duration</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Contract Start Date</label>
+                    <input 
+                      type="date" 
+                      value={formData.contract_start_date} 
+                      onChange={e => setFormData({ ...formData, contract_start_date: e.target.value })}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-visionify-cyan outline-none" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Contract End Date</label>
+                    <input 
+                      type="date" 
+                      value={formData.contract_end_date} 
+                      onChange={e => setFormData({ ...formData, contract_end_date: e.target.value })}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-visionify-cyan outline-none" 
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* B. ABOUT PARTNER / COMMUNITY */}
+              <div className="md:col-span-2 pt-2">
+                <label className="block text-sm font-semibold mb-1">About Partner / Community</label>
+                <textarea 
+                  value={formData.about} 
+                  onChange={e => setFormData({ ...formData, about: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-visionify-cyan outline-none min-h-[100px]" 
+                  placeholder="Write a short introduction about this community, company, or organisation..."
+                />
+              </div>
+
+              {/* C. MOU UPLOAD */}
+              <div className="md:col-span-2 pt-2">
+                <label className="block text-sm font-semibold mb-1">Upload MOU (PDF)</label>
+                <p className="text-xs text-gray-500 mb-2">Upload the signed Memorandum of Understanding document.</p>
+                {formData.mou_file_name && !mouFile && (
+                  <div className="mb-2 text-sm text-green-600 bg-green-50 p-2 rounded inline-flex items-center">
+                    <CheckCircle className="w-4 h-4 mr-1" /> Current MOU uploaded: {formData.mou_file_name}
+                  </div>
+                )}
+                <div className="flex items-center justify-center w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-3 pb-3">
+                      <Upload className="w-6 h-6 mb-1 text-gray-400" />
+                      <p className="text-sm text-gray-500 font-medium">
+                        {mouFile ? mouFile.name : "Select PDF file"}
+                      </p>
+                    </div>
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="application/pdf" 
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          if (e.target.files[0].type !== "application/pdf") {
+                            alert("Only PDF files are allowed.");
+                            return;
+                          }
+                          setMouFile(e.target.files[0]);
+                        }
+                      }} 
+                    />
                   </label>
                 </div>
               </div>

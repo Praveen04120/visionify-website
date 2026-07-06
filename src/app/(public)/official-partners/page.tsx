@@ -88,17 +88,46 @@ export default async function OfficialPartnersPage() {
                       VISIONIFY × {partner.title}
                     </h2>
                     
-                    <p className="text-xl text-gray-700 font-medium leading-relaxed mb-8">
+                    <p className="text-xl text-gray-700 font-medium leading-relaxed mb-4">
                       Visionify is the <strong className="text-visionify-electric">Official Designing Partner</strong> of {partner.title}.
                     </p>
 
-                    {partner.description && (
-                      <div className="mt-4">
+                    {/* Partnership Duration */}
+                    {(partner.contract_start_date || partner.contract_end_date) && (
+                      <p className="text-sm text-gray-600 font-medium mb-6">
+                        {partner.contract_start_date && partner.contract_end_date 
+                          ? `Partnership Duration: ${new Date(partner.contract_start_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })} – ${new Date(partner.contract_end_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}`
+                          : partner.contract_start_date
+                          ? `Partnership Started: ${new Date(partner.contract_start_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}`
+                          : `Partnership Valid Until: ${new Date(partner.contract_end_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}`
+                        }
+                      </p>
+                    )}
+
+                    {/* About Section */}
+                    {partner.about && (
+                      <div className="mb-8 text-left md:text-left mx-auto md:mx-0 max-w-xl">
+                        <h3 className="text-lg font-bold text-visionify-navy mb-2">About {partner.title}</h3>
+                        <div className="text-gray-600 leading-relaxed space-y-2 whitespace-pre-wrap">
+                          {partner.about}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Links */}
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-4">
+                      {partner.description && (
                         <a href={partner.description.startsWith('http') ? partner.description : `https://${partner.description}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white bg-visionify-navy hover:bg-visionify-electric transition-colors">
                           <LinkIcon size={18} /> Visit Partner
                         </a>
-                      </div>
-                    )}
+                      )}
+                      
+                      {partner.mou_url && (
+                        <a href={partner.mou_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-visionify-navy bg-gray-100 hover:bg-gray-200 transition-colors">
+                          MOU <span>→</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

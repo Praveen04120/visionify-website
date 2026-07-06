@@ -24,24 +24,41 @@ export async function POST(request: Request) {
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { title, image_url, description, display_order, is_active } = await request.json();
+    const { 
+      title, 
+      image_url, 
+      description, 
+      display_order, 
+      is_active,
+      contract_start_date,
+      contract_end_date,
+      about,
+      mou_url,
+      mou_file_name
+    } = await request.json();
 
     if (!title || !image_url) {
       return NextResponse.json({ error: "Name and Logo are required" }, { status: 400 });
     }
 
+    const payload: any = {
+      title, // Partner Name
+      category: "_collaborators_",
+      image_url, // Logo URL
+      description: description || "", // Website link
+      display_order: display_order || 0,
+      is_active: is_active ?? true
+    };
+
+    if (contract_start_date) payload.contract_start_date = contract_start_date;
+    if (contract_end_date) payload.contract_end_date = contract_end_date;
+    if (about) payload.about = about;
+    if (mou_url) payload.mou_url = mou_url;
+    if (mou_file_name) payload.mou_file_name = mou_file_name;
+
     const { data, error } = await supabaseAdmin
       .from("portfolio_items")
-      .insert([
-        {
-          title, // Partner Name
-          category: "_collaborators_",
-          image_url, // Logo URL
-          description: description || "", // Website link
-          display_order: display_order || 0,
-          is_active: is_active ?? true
-        }
-      ])
+      .insert([payload])
       .select()
       .single();
 
