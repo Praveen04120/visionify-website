@@ -82,10 +82,10 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
     if (item?.mou_url) {
       try {
         const urlObj = new URL(item.mou_url);
-        const pathParts = urlObj.pathname.split('/portfolio-images/');
+        const pathParts = urlObj.pathname.split('/partner-mous/');
         if (pathParts.length > 1) {
           const filePath = pathParts[1];
-          await supabaseAdmin.storage.from("portfolio-images").remove([filePath]);
+          await supabaseAdmin.storage.from("partner-mous").remove([filePath]);
         }
       } catch (e) {
         console.error("Storage cleanup failed for MOU:", e);

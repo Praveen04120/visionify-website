@@ -132,26 +132,39 @@ export default function ManageCollaborators() {
           const signedRes = await fetch("/api/admin/upload/mou-url", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ filename: mouFile.name })
+            body: JSON.stringify({ 
+              fileName: mouFile.name,
+              fileType: mouFile.type,
+              fileSize: mouFile.size
+            })
           });
           
-          if (!signedRes.ok) {
-            let errorMsg = "Failed to generate upload URL";
-            try { const d = await signedRes.json(); errorMsg = d.error || errorMsg; } catch (e) {}
-            throw new Error(errorMsg);
+          let signedData;
+          try {
+            signedData = await signedRes.json();
+          } catch (e) {
+            throw new Error("Upload service returned an invalid response. Please try again.");
           }
-          const { signedUrl, token, path, publicUrl } = await signedRes.json();
+
+          if (!signedRes.ok || !signedData.success) {
+            throw new Error(signedData?.error || "Failed to generate upload URL");
+          }
+          
+          const { token, path, bucket } = signedData;
           
           // 2. Upload directly to Supabase using the frontend client to bypass Vercel limits
           const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('portfolio-images')
+            .from(bucket)
             .uploadToSignedUrl(path, token, mouFile, {
               contentType: 'application/pdf',
             });
             
           if (uploadError) throw new Error(uploadError.message || "Direct upload to Supabase failed");
           
-          finalMouUrl = publicUrl;
+          // 3. Generate Public URL locally
+          const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(path);
+          
+          finalMouUrl = publicUrlData.publicUrl;
           finalMouName = mouFile.name;
         } finally {
           setUploadingMou(false);

@@ -7,39 +7,41 @@ export async function POST(request: Request) {
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { filename } = await request.json();
-    if (!filename) {
-      return NextResponse.json({ error: "Filename is required" }, { status: 400 });
+    const { fileName, fileType, fileSize } = await request.json();
+    
+    if (!fileName || !fileType || !fileSize) {
+      return NextResponse.json({ success: false, error: "Invalid payload" }, { status: 400 });
     }
 
-    const sanitizedName = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const path = `partner-mous/${crypto.randomUUID()}/${sanitizedName}`;
+    if (!fileName.toLowerCase().endsWith('.pdf') || fileType !== 'application/pdf') {
+      return NextResponse.json({ success: false, error: "Only PDF files are allowed." }, { status: 400 });
+    }
+
+    if (fileSize <= 0 || fileSize > 10 * 1024 * 1024) {
+      return NextResponse.json({ success: false, error: "Only PDF files up to 10 MB are allowed." }, { status: 400 });
+    }
+
+    const sanitizedName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const path = `${crypto.randomUUID()}/${Date.now()}-mou.pdf`; // No leading 'partner-mous/' because we are IN the partner-mous bucket now
 
     // Generate signed upload URL
     const { data, error } = await supabaseAdmin
       .storage
-      .from('portfolio-images')
+      .from('partner-mous')
       .createSignedUploadUrl(path);
 
     if (error) {
       throw error;
     }
 
-    // Get the final public URL that will be active once uploaded
-    const { data: publicUrlData } = supabaseAdmin
-      .storage
-      .from('portfolio-images')
-      .getPublicUrl(path);
-
     return NextResponse.json({ 
       success: true, 
-      signedUrl: data.signedUrl,
+      path: path,
       token: data.token,
-      path: data.path,
-      publicUrl: publicUrlData.publicUrl 
+      bucket: 'partner-mous'
     });
 
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
