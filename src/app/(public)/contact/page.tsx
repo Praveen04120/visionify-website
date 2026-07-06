@@ -1,6 +1,19 @@
 import ContactForm from "@/components/ContactForm";
 import { Mail, Phone, MapPin } from "lucide-react";
 
+export const metadata = {
+  title: "Visionify India | Contact Us",
+  description: "Get in touch with Visionify India. We are ready to help you with premium brand promotions, event banners, and creative designs.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Visionify India | Contact Us",
+    description: "Get in touch with Visionify India. We are ready to help you with premium brand promotions, event banners, and creative designs.",
+    url: "https://visionify.co.in/contact",
+  },
+};
+
 export default function ContactPage() {
   return (
     <div className="pt-28 pb-20 min-h-screen">

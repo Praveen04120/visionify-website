@@ -6,8 +6,16 @@ import { supabase } from "@/lib/supabase";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Official Partners | Visionify",
-  description: "Visionify Official Partnerships",
+  title: "Visionify India | Official Partners",
+  description: "Discover the official partners and collaborators of Visionify India. We work with leading brands, communities, and organizations.",
+  alternates: {
+    canonical: "/official-partners",
+  },
+  openGraph: {
+    title: "Visionify India | Official Partners",
+    description: "Discover the official partners and collaborators of Visionify India. We work with leading brands, communities, and organizations.",
+    url: "https://visionify.co.in/official-partners",
+  },
 };
 
 export default async function OfficialPartnersPage() {

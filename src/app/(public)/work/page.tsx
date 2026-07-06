@@ -4,8 +4,16 @@ import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export const metadata = {
-  title: "Our Work | Visionify",
-  description: "Explore the premium portfolio of Visionify, including logos, branding, posters, and invitations.",
+  title: "Visionify India | Our Portfolio & Creative Work",
+  description: "Explore the premium portfolio of Visionify India. View our creative designs across brand promotions, logos, posters, event banners, and wedding invitations.",
+  alternates: {
+    canonical: "/work",
+  },
+  openGraph: {
+    title: "Visionify India | Our Portfolio & Creative Work",
+    description: "Explore the premium portfolio of Visionify India. View our creative designs across brand promotions, logos, posters, event banners, and wedding invitations.",
+    url: "https://visionify.co.in/work",
+  },
 };
 
 export const revalidate = 60;

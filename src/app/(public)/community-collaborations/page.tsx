@@ -1,6 +1,19 @@
 import { Calendar, Users, Mail, Phone, MapPin } from "lucide-react";
 import CommunityForm from "@/components/CommunityForm";
 
+export const metadata = {
+  title: "Visionify India | Community Collaborations",
+  description: "Partner with Visionify India for your community events. We provide premium visual design, event banners, and branding support for university groups and festivals.",
+  alternates: {
+    canonical: "/community-collaborations",
+  },
+  openGraph: {
+    title: "Visionify India | Community Collaborations",
+    description: "Partner with Visionify India for your community events. We provide premium visual design, event banners, and branding support for university groups and festivals.",
+    url: "https://visionify.co.in/community-collaborations",
+  },
+};
+
 export default function CommunityCollaborations() {
   return (
     <div className="pt-28 pb-20 min-h-screen bg-gray-50/30">

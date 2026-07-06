@@ -44,8 +44,29 @@ export default async function Home() {
     };
   });
 
+  const webpageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Visionify India | Official Website",
+    "url": "https://visionify.co.in/",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Visionify India",
+      "url": "https://visionify.co.in/"
+    },
+    "about": {
+      "@type": "Organization",
+      "name": "Visionify India"
+    },
+    "inLanguage": "en-IN"
+  };
+
   return (
     <div className="relative overflow-hidden selection:bg-visionify-cyan selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webpageSchema) }}
+      />
       {/* Background Decorative Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-200/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
       <div className="absolute top-[20%] right-[-10%] w-[30%] h-[50%] bg-pink-200/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>

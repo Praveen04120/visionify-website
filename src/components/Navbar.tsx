@@ -52,7 +52,7 @@ export default function Navbar() {
             <div className="relative w-12 h-12 overflow-hidden rounded-full border-2 border-white shadow-md group-hover:border-visionify-cyan transition-colors">
               <Image 
                 src="/logo.jpeg" 
-                alt="Visionify Logo" 
+                alt="Visionify India Logo" 
                 fill 
                 sizes="(max-width: 48px) 100vw, 48px"
                 className="object-cover"

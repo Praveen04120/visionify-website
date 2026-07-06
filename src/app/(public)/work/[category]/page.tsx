@@ -35,8 +35,23 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     .eq("slug", resolvedParams.category)
     .single();
 
-  if (!category) return { title: "Not Found | Visionify" };
-  return { title: `${category.name} | Our Work | Visionify`, description: category.description || `Explore our ${category.name} portfolio.` };
+  if (!category) return { title: "Not Found | Visionify India" };
+  
+  const title = `Visionify India | ${category.name} Portfolio`;
+  const description = category.description || `Explore our premium ${category.name} portfolio by Visionify India. View our creative designs that make your brand stand out.`;
+  
+  return { 
+    title, 
+    description,
+    alternates: {
+      canonical: `/work/${resolvedParams.category}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://visionify.co.in/work/${resolvedParams.category}`,
+    }
+  };
 }
 
 // Ensure the route is dynamically rendered or revalidated as needed
