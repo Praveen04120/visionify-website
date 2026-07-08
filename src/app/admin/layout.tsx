@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 
   return (
-    <div className="flex h-[100dvh] bg-gray-50 overflow-hidden text-visionify-navy">
+    <div className="flex h-[100dvh] bg-visionify-blush overflow-hidden text-visionify-navy">
       
       {/* Desktop Fixed Sidebar */}
       <aside className="hidden md:flex w-64 bg-white border-r border-gray-200 flex-col shrink-0 fixed left-0 top-0 h-full z-10 shadow-sm">
@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-8 bg-gray-50">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-8 bg-visionify-blush">
           <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>

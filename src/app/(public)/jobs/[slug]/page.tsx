@@ -187,7 +187,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ slug: stri
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+      <div className="min-h-screen bg-visionify-blush flex justify-center items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-visionify-cyan"></div>
       </div>
     );
@@ -195,7 +195,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ slug: stri
 
   if (error || !job) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-32 pb-20 px-4 flex flex-col items-center">
+      <div className="min-h-screen bg-visionify-blush pt-32 pb-20 px-4 flex flex-col items-center">
         <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">{error || "Job Not Found"}</h2>
           <Link href="/jobs" className="text-visionify-cyan font-semibold hover:underline">
@@ -208,7 +208,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ slug: stri
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-32 pb-20 px-4 flex flex-col items-center">
+      <div className="min-h-screen bg-visionify-blush pt-32 pb-20 px-4 flex flex-col items-center">
         <div className="max-w-lg w-full bg-white p-10 rounded-2xl shadow-sm border border-gray-100 text-center">
           <div className="flex justify-center mb-6">
             <CheckCircle size={64} className="text-green-500" />
@@ -226,7 +226,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ slug: stri
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-32 pb-20">
+    <div className="min-h-screen bg-visionify-blush pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <Link href="/jobs" className="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-visionify-cyan mb-8 transition-colors">
