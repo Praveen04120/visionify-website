@@ -90,9 +90,10 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ id: 
   const getStatusColor = (status: string) => {
     switch(status) {
       case 'New': return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'Reviewed': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'Interviewing': return 'bg-purple-100 text-purple-700 border-purple-200';
-      case 'Hired': return 'bg-green-100 text-green-700 border-green-200';
+      case 'Under Review': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'Shortlisted': return 'bg-teal-100 text-teal-700 border-teal-200';
+      case 'Interview Scheduled': return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'Selected': return 'bg-green-100 text-green-700 border-green-200';
       case 'Rejected': return 'bg-red-100 text-red-700 border-red-200';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -211,9 +212,10 @@ export default function JobApplicationsPage({ params }: { params: Promise<{ id: 
                     className={`px-4 py-2 rounded-xl text-sm font-semibold border focus:outline-none focus:ring-2 focus:ring-visionify-cyan cursor-pointer ${getStatusColor(selectedApp.status)}`}
                   >
                     <option value="New" className="bg-white text-gray-900">New</option>
-                    <option value="Reviewed" className="bg-white text-gray-900">Reviewed</option>
-                    <option value="Interviewing" className="bg-white text-gray-900">Interviewing</option>
-                    <option value="Hired" className="bg-white text-gray-900">Hired</option>
+                    <option value="Under Review" className="bg-white text-gray-900">Under Review</option>
+                    <option value="Shortlisted" className="bg-white text-gray-900">Shortlisted</option>
+                    <option value="Interview Scheduled" className="bg-white text-gray-900">Interview Scheduled</option>
+                    <option value="Selected" className="bg-white text-gray-900">Selected</option>
                     <option value="Rejected" className="bg-white text-gray-900">Rejected</option>
                   </select>
                   <button onClick={() => setSelectedApp(null)} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
