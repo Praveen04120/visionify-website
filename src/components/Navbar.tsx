@@ -24,6 +24,7 @@ export default function Navbar() {
     { name: "Our Work", href: "/work" },
     { name: "Official Partners", href: "/official-partners" },
     { name: "Community Collaborations", href: "/community-collaborations" },
+    { name: "Careers", href: "/jobs" },
     { name: "Contact Us", href: "/contact" },
   ];
 

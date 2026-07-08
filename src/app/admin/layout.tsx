@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Image as ImageIcon, PlusCircle, MessageSquare, LogOut, Mailbox, Menu, X } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, PlusCircle, MessageSquare, LogOut, Mailbox, Menu, X, Briefcase } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -26,6 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Manage Portfolio", href: "/admin/manage", icon: <ImageIcon size={20} /> },
     { name: "Add New Item", href: "/admin/add", icon: <PlusCircle size={20} /> },
     { name: "Categories", href: "/admin/categories", icon: <LayoutDashboard size={20} /> },
+    { name: "Job Openings", href: "/admin/jobs", icon: <Briefcase size={20} /> },
     { name: "Contact Messages", href: "/admin/contact-messages", icon: <Mailbox size={20} /> },
     { name: "Community Apps", href: "/admin/community-applications", icon: <MessageSquare size={20} /> },
     { name: "Collaborators", href: "/admin/collaborators", icon: <ImageIcon size={20} /> },
